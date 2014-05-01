@@ -1,0 +1,17 @@
+{
+	"name": "mediaserver",
+	"version": "0.0.1",
+	"author": "Oguz Bastemur",
+	"description": "Media streaming for http(s) server",
+	"company": "Nubisa Inc.",
+	"website": "https://github.com/obastemur/mediaserver",
+	"startup": "index.js",
+	"extract": false,
+	"output": "mediaserver.jx",
+	"files": [
+		"index.js",
+		"package.json"
+	],
+	"assets": [],
+	"library": true
+}
