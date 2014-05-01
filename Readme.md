@@ -1,6 +1,13 @@
 **Media Streaming Module for JXcore and Node.JS http(s) server**
 
-Install
+
+**Compatibility**
+
+Compatible with HTML5 and Flash players (Tested on IE 6+, FF, Chrome, Mobile Safari - IE - Chrome)
+
+
+
+**Install**
 
 ```npm install mediaserver```
 

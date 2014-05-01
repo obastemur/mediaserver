@@ -57,7 +57,7 @@ else
 
 
 var getRange = function(req, total){
-    var range = [0, total];
+    var range = [0, total, 0];
     var rinfo = req.headers.range;
 
     if(rinfo){
@@ -73,12 +73,12 @@ var getRange = function(req, total){
                 }
             }catch(e){}
         }
-    }
 
-    range[2] = range[1] - range[0];//chunk size
+        range[2] = range[1] - range[0];//chunk size
 
-    if(total-1<range[2]){
-        range[2] = total-1;
+        if(total-1<range[2]){
+            range[2] = total-1;
+        }
     }
 
     return range;
@@ -106,17 +106,20 @@ exports.pipe = function(req, res, path, type){
 
     var range = getRange(req, total);
 
-    if (range[2]) {
-        if(!type){
-            var ext = pathModule.extname(path);
-            if(ext && ext.length){
-                type = exts[ext];
-            }
+    if(!type){
+        var ext = pathModule.extname(path);
+        if(ext && ext.length){
+            type = exts[ext];
         }
+    }
 
-        if(type){
-            var file = fs.createReadStream(path, {start: range[0], end: range[1]});
+    if(!type){
+        res.write("Media format couldn't found for " + pathmodule.basename(path));
+    }
+    else {
+        var file = fs.createReadStream(path, {start: range[0], end: range[1]});
 
+        if (range[2]) {
             res.writeHead(206,
                 {
                     'Accept-Ranges': 'bytes',
@@ -124,17 +127,22 @@ exports.pipe = function(req, res, path, type){
                     'Content-Length': range[2],
                     'Content-Type': type
                 });
-            file.pipe(res);
-
-            file.on('close', function(){
-                res.end(0);
-            });
-
-            return true;
         }
         else{
-            res.write("Media format couldn't found for " + pathmodule.basename(path));
+            res.writeHead(200,
+                {
+                    'Content-Length': range[1],
+                    'Content-Type': type
+                });
         }
+
+        file.pipe(res);
+
+        file.on('close', function(){
+            res.end(0);
+        });
+
+        return true;
     }
 
     res.end(0);
