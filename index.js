@@ -56,6 +56,9 @@ else
 }
 
 
+exports.mediaTypes = exts;
+
+
 var getRange = function(req, total){
     var range = [0, total, 0];
     var rinfo = req.headers.range;
@@ -125,14 +128,20 @@ exports.pipe = function(req, res, path, type){
                     'Accept-Ranges': 'bytes',
                     'Content-Range': 'bytes ' + range[0] + '-' + range[1] + '/' + total,
                     'Content-Length': range[2],
-                    'Content-Type': type
+                    'Content-Type': type,
+                    'Access-Control-Allow-Origin': req.headers.origin || "*",
+                    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                    'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
                 });
         }
         else{
             res.writeHead(200,
                 {
                     'Content-Length': range[1],
-                    'Content-Type': type
+                    'Content-Type': type,
+                    'Access-Control-Allow-Origin': req.headers.origin || "*",
+                    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                    'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
                 });
         }
 
@@ -145,6 +154,5 @@ exports.pipe = function(req, res, path, type){
         return true;
     }
 
-    res.end(0);
     return false;
 };

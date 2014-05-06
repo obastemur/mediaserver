@@ -1,8 +1,8 @@
 {
 	"name": "mediaserver",
-	"version": "0.0.2",
+	"version": "0.0.3",
     "author": "Oguz Bastemur",
-    "description": "Media streaming for http(s) server",
+    "description": "Media & static asset streaming for http(s) server",
 	"company": "Nubisa Inc.",
 	"website": "http://nubisa.com",
 	"startup": "index.js",

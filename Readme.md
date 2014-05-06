@@ -1,10 +1,9 @@
-**Media Streaming Module for JXcore and Node.JS http(s) server**
+**Media & static asset streaming module for JXcore and Node.JS http(s) server**
 
 
 **Compatibility**
 
-Compatible with HTML5 and Flash players (Tested on IE 6+, FF, Chrome, Mobile Safari - IE - Chrome)
-
+(Tested on IE 6+, FF, Chrome, Mobile Safari - IE - Chrome)
 
 
 **Install**
@@ -39,9 +38,7 @@ from the client side
 </audio>
 ```
 
-**TODO**
-- create an express compatible interface
-
+Feel free to contribute
 
 **LICENSE**
 MIT

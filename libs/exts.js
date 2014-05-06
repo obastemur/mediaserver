@@ -9,10 +9,32 @@
 
 // ref : http://www.webmaster-toolkit.com/mime-types.shtml
 exports = module.exports = {
+
+    // plain formats
+    ".html": "text/html",
+    ".css": "text/css",
+    ".js": "text/javascript",
+    ".txt": "text/plain",
+
+    // custom
+    ".pdf": "application/octet-stream",
+    ".woff":"application/octet-stream",
+    ".ttf":"application/octet-stream",
+    ".svg":"application/octet-stream",
+    ".otf":"application/octet-stream",
+    ".eot":"application/octet-stream",
+
+    // compressed formats
+    ".zip": "application/octet-stream",
+    ".rar": "application/octet-stream",
+    ".7z": "application/octet-stream",
+    ".gz": "application/octet-stream",
+    ".tar": "application/octet-stream",
+
+    // media formats
     ".afl": "video/animaflex",
     ".ai": "application/postscript",
     ".aif": "audio/aiff",
-    ".aif": "audio/x-aiff",
     ".aifc": "audio/aiff",
     ".aiff": "audio/aiff",
     ".aip": "text/x-audiosoft-intra",
