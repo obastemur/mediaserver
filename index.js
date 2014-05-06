@@ -4,8 +4,7 @@
  * MIT license, Oguz Bastemur 2014
  */
 
-var http = require('http'),
-    fs = require('fs'),
+var fs = require('fs'),
     exts = require('./libs/exts'),
     pathModule = require('path');
 
