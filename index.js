@@ -9,6 +9,8 @@ var fs = require('fs'),
     pathModule = require('path');
 
 var fileInfo, shared;
+var pipe_extensions = {};
+var pipe_extension_id = 0;
 
 // in case the host process is JXcore, lets benefit from the
 // shared memory store. This way, the app doesn't need to read file stat
@@ -108,8 +110,8 @@ exports.pipe = function(req, res, path, type){
 
     var range = getRange(req, total);
 
+    var ext = pathModule.extname(path);
     if(!type){
-        var ext = pathModule.extname(path);
         if(ext && ext.length){
             type = exts[ext];
         }
@@ -120,38 +122,80 @@ exports.pipe = function(req, res, path, type){
     }
     else {
         var file = fs.createReadStream(path, {start: range[0], end: range[1]});
+        if(!ext.length || !pipe_extensions[ext]){
+            if (range[2]) {
+                res.writeHead(206,
+                    {
+                        'Accept-Ranges': 'bytes',
+                        'Content-Range': 'bytes ' + range[0] + '-' + range[1] + '/' + total,
+                        'Content-Length': range[2],
+                        'Content-Type': type,
+                        'Access-Control-Allow-Origin': req.headers.origin || "*",
+                        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                        'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
+                    });
+            }
+            else{
+                res.writeHead(200,
+                    {
+                        'Content-Length': range[1],
+                        'Content-Type': type,
+                        'Access-Control-Allow-Origin': req.headers.origin || "*",
+                        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                        'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
+                    });
+            }
 
-        if (range[2]) {
-            res.writeHead(206,
-                {
-                    'Accept-Ranges': 'bytes',
-                    'Content-Range': 'bytes ' + range[0] + '-' + range[1] + '/' + total,
-                    'Content-Length': range[2],
-                    'Content-Type': type,
-                    'Access-Control-Allow-Origin': req.headers.origin || "*",
-                    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-                    'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
-                });
-        }
-        else{
+            file.pipe(res);
+            file.on('close', function(){
+                res.end(0);
+            });
+        }else{
+            var exts = pipe_extensions[ext];
             res.writeHead(200,
-                {
-                    'Content-Length': range[1],
-                    'Content-Type': type,
-                    'Access-Control-Allow-Origin': req.headers.origin || "*",
-                    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-                    'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
+            {
+                'Content-Type': type,
+                'Access-Control-Allow-Origin': req.headers.origin || "*",
+                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
+            });
+            for(var o in exts){
+                exts[o](file, res, function(){
+                    if(!res.__ended){
+                        res.__ended = true;
+                        res.end(0);
+                    }
                 });
+            }
         }
-
-        file.pipe(res);
-
-        file.on('close', function(){
-            res.end(0);
-        });
 
         return true;
     }
 
     return false;
+};
+
+exports.on = function(ext, m){
+    if(!pipe_extensions[ext]){
+        pipe_extensions[ext] = [];
+    }
+
+    m.pipe_extension_id = pipe_extension_id++;
+    m.pipe_extension = ext;
+
+    pipe_extensions[ext].push(m);
+};
+
+exports.removeEvent = function(method){
+    if(!method.pipe_extension || !method.pipe_extension_id){
+        return;
+    }
+    if(pipe_extensions[method.pipe_extension]){
+        var exts = pipe_extensions[method.pipe_extension];
+        for(var i = 0, ln = exts.length;i<ln;i++){
+            if(exts[i].pipe_extension_id == method.pipe_extension_id){
+                pipe_extensions[method.pipe_extension] = exts.splice(i, 1);
+            }
+        }
+    }
 };
