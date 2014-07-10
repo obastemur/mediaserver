@@ -160,7 +160,7 @@ exports.pipe = function(req, res, path, type){
                 'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
             });
             for(var o in exts){
-                exts[o](file, res, function(){
+                exts[o](file, req, res, function(){
                     if(!res.__ended){
                         res.__ended = true;
                         res.end(0);
