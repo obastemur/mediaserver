@@ -19,7 +19,7 @@ if(global.jxcore){
     shared = jxcore.store.shared;
     fileInfo = function(path){
         if(path){
-            if(shared.exists(path)){
+            if(!exports.noCache && shared.exists(path)){
                 return parseInt(shared.read(path));
             }
             else{
@@ -40,7 +40,7 @@ else
     shared = {};
     fileInfo = function(path){
         if(path){
-            if(shared[path]){
+            if(!exports.noCache && shared[path]){
                 return shared[path];
             }
             else{
@@ -56,6 +56,8 @@ else
     };
 }
 
+//you can set it to true for development
+exports.noCache = false;
 
 exports.mediaTypes = exts;
 
@@ -95,7 +97,7 @@ var isString = function(str){
 };
 
 
-exports.pipe = function(req, res, path, type){
+exports.pipe = function(req, res, path, type, opt_cb){
 
     if (!isString(path)){
         throw "path must be a string value";
@@ -122,6 +124,7 @@ exports.pipe = function(req, res, path, type){
     }
     else {
         var file = fs.createReadStream(path, {start: range[0], end: range[1]});
+
         if(!ext.length || !pipe_extensions[ext]){
             if (range[2]) {
                 res.writeHead(206,
@@ -149,9 +152,12 @@ exports.pipe = function(req, res, path, type){
             file.pipe(res);
             file.on('close', function(){
                 res.end(0);
+                if(opt_cb){
+                    opt_cb(path);
+                }
             });
         }else{
-            var exts = pipe_extensions[ext];
+            var _exts = pipe_extensions[ext];
             res.writeHead(200,
             {
                 'Content-Type': type,
@@ -159,8 +165,8 @@ exports.pipe = function(req, res, path, type){
                 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
                 'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
             });
-            for(var o in exts){
-                exts[o](file, req, res, function(){
+            for(var o in _exts){
+                _exts[o](file, req, res, function(){
                     if(!res.__ended){
                         res.__ended = true;
                         res.end(0);
