@@ -120,7 +120,7 @@ exports.pipe = function(req, res, path, type, opt_cb){
     }
 
     if(!type){
-        res.write("Media format couldn't found for " + pathmodule.basename(path));
+        res.write("Media format couldn't found for " + pathModule.basename(path));
     }
     else {
         var file = fs.createReadStream(path, {start: range[0], end: range[1]});
