@@ -1,3 +1,11 @@
+0.0.5
+* code style update
+* minor improvements and stability updates
+* streaming fix for chrome
+
+0.0.4 - 0.0.5
+* event support for extension streaming
+
 0.0.3
 
 * exports.mediaTypes proxies the media types

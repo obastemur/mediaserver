@@ -15,6 +15,10 @@ or
 ```jx install mediaserver```
 
 
+**Sample**
+Visit `sample` folder for sample application.
+
+
 **Usage**
 
 
