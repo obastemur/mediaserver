@@ -94,6 +94,7 @@ exports = module.exports = {
   ".mpa": "audio/mpeg",
   ".mpe": "video/mpeg",
   ".mpeg": "video/mpeg",
+  ".mp4": "video/mpeg",
   ".mpg": "video/mpeg",
   ".mpga": "audio/mpeg",
   ".mv": "video/x-sgi-movie",

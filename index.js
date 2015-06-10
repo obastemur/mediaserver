@@ -113,8 +113,10 @@ exports.pipe = function (req, res, path, type, opt_cb) {
     }
   }
 
-  if (type && type.length && type[0] == '.')
+  if (type && type.length && type[0] == '.') {
+    ext = type;
     type = exts[type];
+  }
 
   if (!type || !type.length) {
     res.write("Media format not found for " + pathModule.basename(path));

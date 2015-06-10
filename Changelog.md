@@ -1,4 +1,8 @@
-0.0.5
+0.0.7
+* consistent mime type from extension
+* mp4 added to exts list
+
+0.0.6
 * code style update
 * minor improvements and stability updates
 * streaming fix for chrome

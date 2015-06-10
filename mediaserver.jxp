@@ -1,6 +1,6 @@
 {
 	"name": "mediaserver",
-	"version": "0.0.6",
+	"version": "0.0.7",
     "author": "Oguz Bastemur",
     "description": "Media & static asset streaming for http(s) server",
 	"company": "Nubisa Inc.",
