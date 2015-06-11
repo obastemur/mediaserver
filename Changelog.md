@@ -1,3 +1,6 @@
+0.0.8
+* don't cache on'noCache
+
 0.0.7
 * consistent mime type from extension
 * mp4 added to exts list

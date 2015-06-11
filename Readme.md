@@ -1,13 +1,11 @@
 **Media & static asset streaming module for JXcore and Node.JS http(s) server**
 
 
-**Compatibility**
-
+##### Compatibility
 (Tested on IE 6+, FF, Chrome, Mobile Safari - IE - Chrome)
 
 
-**Install**
-
+##### Installation
 ```npm install mediaserver```
 
 or
@@ -15,13 +13,10 @@ or
 ```jx install mediaserver```
 
 
-**Sample**
+##### Application Sample
 Visit `sample` folder for sample application.
 
-
-**Usage**
-
-
+##### Sample Usage
 ```
 var http = require('http'),
     ms = require('mediaserver');
@@ -42,7 +37,14 @@ from the client side
 </audio>
 ```
 
-Feel free to contribute
+##### API
 
-**LICENSE**
+`.noCache` (true/false) enable/disable caching stat results (default enabled)
+
+`.mediaTypes` Dictionary of media types and their corresponding media identifiers (i.e. "mp4" => "video/mpeg")
+
+`.pipe(request, response, path, extension or media identifier)` pipe a file from file system to browser
+
+
+##### LICENSE
 MIT

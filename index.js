@@ -27,7 +27,9 @@ if (global.jxcore) {
           return null;
         }
         var stat = fs.statSync(path);
-        shared.set(path, stat.size);
+        if (!exports.noCache)
+          shared.set(path, stat.size);
+        
         return stat.size;
       }
     }
@@ -47,7 +49,9 @@ else {
           return null;
         }
         var stat = fs.statSync(path);
-        shared[path] = stat.size;
+        if (!exports.noCache)
+          shared[path] = stat.size;
+        
         return stat.size;
       }
     }
