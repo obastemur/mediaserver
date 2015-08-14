@@ -1,9 +1,7 @@
-**Media & static asset streaming module for JXcore and Node.JS http(s) server**
-
+###Media & static asset streaming module for JXcore and Node.JS http(s) server
 
 ##### Compatibility
 (Tested on IE 6+, FF, Chrome, Mobile Safari - IE - Chrome)
-
 
 ##### Installation
 ```npm install mediaserver```
@@ -11,7 +9,6 @@
 or
 
 ```jx install mediaserver```
-
 
 ##### Application Sample
 Visit `sample` folder for sample application.
@@ -36,6 +33,12 @@ from the client side
     Your browser does not support the audio element.
 </audio>
 ```
+
+### express
+
+app.get('/music.mp3', function(req, res){
+  ms.pipe(req, res, "/music.mp3");
+});
 
 ##### API
 
