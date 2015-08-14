@@ -35,10 +35,11 @@ from the client side
 ```
 
 #### express
-
+```
 app.get('/music.mp3', function(req, res){
   ms.pipe(req, res, "/music.mp3");
 });
+```
 
 #### API
 
