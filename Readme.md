@@ -1,7 +1,7 @@
 #### Media & static asset streaming module for JXcore and Node.JS http(s) server
 
 #### Compatibility
-(Tested on IE 6+, FF, Chrome, Mobile Safari - IE - Chrome)
+(Tested on IE 6+, FF, Chrome, Mobile Safari - IE/Edge - Chrome and Brave)
 
 #### Installation
 ```npm install mediaserver```
@@ -43,7 +43,7 @@ app.get('/music.mp3', function(req, res){
 
 #### API
 
-`.noCache` (true/false) enable/disable caching stat results (default enabled)
+`.noCache` (true/false) enable/disable caching `file stat` results (default enabled)
 
 `.mediaTypes` Dictionary of media types and their corresponding media identifiers (i.e. "mp4" => "video/mpeg")
 

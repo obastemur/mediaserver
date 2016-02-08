@@ -1,3 +1,6 @@
+0.0.9
+* minor stability improvements
+
 0.0.8
 * don't cache on'noCache
 

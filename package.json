@@ -1,7 +1,7 @@
 {
     "name": "mediaserver",
     "description": "Media & static asset streaming for http(s) server",
-    "version": "0.0.7",
+    "version": "0.0.9",
     "author": {
         "name": "Oguz Bastemur",
         "email": "obastemur@gmail.com"
