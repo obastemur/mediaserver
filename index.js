@@ -1,7 +1,7 @@
 /**
  * mediaserver module for JXcore and Node.JS
  *
- * MIT license, Oguz Bastemur 2014
+ * MIT license, Oguz Bastemur 2014-2016
  */
 
 var fs = require('fs'),
@@ -12,24 +12,25 @@ var fileInfo, shared;
 var pipe_extensions = {};
 var pipe_extension_id = 0;
 
-// in case the host process is JXcore, lets benefit from the
+// in case host process is JXcore, lets benefit from the
 // shared memory store. This way, the app doesn't need to read file stat
 // per each thread OR use v8 heap memory for storing the information
 if (global.jxcore) {
   shared = jxcore.store.shared;
   fileInfo = function (path) {
     if (path) {
-      if (!exports.noCache && shared.exists(path)) {
-        return parseInt(shared.read(path));
+      if (!exports.noCache && shared.exists("%MEDIA-SERVER%" + path)) {
+        return parseInt(shared.read("%MEDIA-SERVER%" + path));
       }
       else {
         if (!fs.existsSync(path)) {
           return null;
         }
+
         var stat = fs.statSync(path);
         if (!exports.noCache)
-          shared.set(path, stat.size);
-        
+          shared.set("%MEDIA-SERVER%" + path, stat.size);
+
         return stat.size;
       }
     }
@@ -51,7 +52,7 @@ else {
         var stat = fs.statSync(path);
         if (!exports.noCache)
           shared[path] = stat.size;
-        
+
         return stat.size;
       }
     }
@@ -66,7 +67,7 @@ exports.mediaTypes = exts;
 
 var getRange = function (req, total) {
   var range = [0, total, 0];
-  var rinfo = req.headers.range;
+  var rinfo = req.headers ? req.headers.range : null;
 
   if (rinfo) {
     var rloc = rinfo.indexOf('bytes=');
@@ -98,7 +99,7 @@ var isString = function (str) {
 
 exports.pipe = function (req, res, path, type, opt_cb) {
   if (!isString(path)) {
-    throw "path must be a string value";
+    throw new TypeError("path must be a string value");
   }
 
   var total = fileInfo(path);
@@ -111,10 +112,8 @@ exports.pipe = function (req, res, path, type, opt_cb) {
   var range = getRange(req, total);
 
   var ext = pathModule.extname(path);
-  if (!type) {
-    if (ext && ext.length) {
-      type = exts[ext];
-    }
+  if (!type && ext && ext.length) {
+    type = exts[ext];
   }
 
   if (type && type.length && type[0] == '.') {
@@ -194,7 +193,7 @@ exports.on = function (ext, m) {
 };
 
 exports.removeEvent = function (method) {
-  if (!method.pipe_extension || !method.pipe_extension_id) {
+  if (!method || !method.pipe_extension || !method.pipe_extension_id) {
     return;
   }
 
