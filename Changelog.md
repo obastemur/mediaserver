@@ -1,3 +1,6 @@
+0.1.0
+* Desktop safari media streaming fix
+
 0.0.9
 * minor stability improvements
 

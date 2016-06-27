@@ -1,14 +1,10 @@
-#### Media & static asset streaming module for JXcore and Node.JS http(s) server
+#### Media & static asset streaming module for node.js http(s) server
 
 #### Compatibility
 (Tested on IE 6+, FF, Chrome, Mobile Safari - IE/Edge - Chrome and Brave)
 
 #### Installation
 ```npm install mediaserver```
-
-or
-
-```jx install mediaserver```
 
 #### Application Sample
 Visit `sample` folder for sample application.

@@ -1,5 +1,5 @@
 /**
- * mediaserver module for JXcore and Node.JS
+ * mediaserver module for node.js
  *
  * MIT license, Oguz Bastemur 2014-2016
  */
@@ -8,61 +8,31 @@ var fs = require('fs'),
   exts = require('./libs/exts'),
   pathModule = require('path');
 
-var fileInfo, shared;
 var pipe_extensions = {};
 var pipe_extension_id = 0;
 
-// in case host process is JXcore, lets benefit from the
-// shared memory store. This way, the app doesn't need to read file stat
-// per each thread OR use v8 heap memory for storing the information
-if (global.jxcore) {
-  shared = jxcore.store.shared;
-  fileInfo = function (path) {
-    if (path) {
-      if (!exports.noCache && shared.exists("%MEDIA-SERVER%" + path)) {
-        return parseInt(shared.read("%MEDIA-SERVER%" + path));
-      }
-      else {
-        if (!fs.existsSync(path)) {
-          return null;
-        }
-
-        var stat = fs.statSync(path);
-        if (!exports.noCache)
-          shared.set("%MEDIA-SERVER%" + path, stat.size);
-
-        return stat.size;
-      }
+var shared = {};
+var fileInfo = function (path) {
+  if (path) {
+    if (!exports.noCache && shared[path]) {
+      return shared[path];
     }
-    return 0;
-  };
-}
-// otherwise, use a local key value store
-else {
-  shared = {};
-  fileInfo = function (path) {
-    if (path) {
-      if (!exports.noCache && shared[path]) {
-        return shared[path];
+    else {
+      if (!fs.existsSync(path)) {
+        return null;
       }
-      else {
-        if (!fs.existsSync(path)) {
-          return null;
-        }
-        var stat = fs.statSync(path);
-        if (!exports.noCache)
-          shared[path] = stat.size;
+      var stat = fs.statSync(path);
+      if (!exports.noCache)
+        shared[path] = stat.size;
 
-        return stat.size;
-      }
+      return stat.size;
     }
-    return 0;
-  };
-}
+  }
+  return 0;
+};
 
-//you can set it to true for development
+// set this to true for development mode
 exports.noCache = false;
-
 exports.mediaTypes = exts;
 
 var getRange = function (req, total) {
@@ -77,6 +47,7 @@ var getRange = function (req, total) {
         range[0] = parseInt(ranges[0]);
         if (ranges[1] && ranges[1].length) {
           range[1] = parseInt(ranges[1]);
+          range[1] = range[1] < 16 ? 16 : range[1];
         }
       } catch (e) {}
     }
@@ -127,26 +98,22 @@ exports.pipe = function (req, res, path, type, opt_cb) {
     var file = fs.createReadStream(path, {start: range[0], end: range[1]});
 
     if (!ext.length || !pipe_extensions[ext]) {
+      var header = {
+        'Content-Length': range[1],
+        'Content-Type': type,
+        'Access-Control-Allow-Origin': req.headers.origin || "*",
+        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
+      };
+
       if (range[2]) {
-        res.writeHead(206,
-          {
-            'Accept-Ranges': 'bytes',
-            'Content-Range': 'bytes ' + range[0] + '-' + range[1] + '/' + total,
-            'Content-Length': range[2],
-            'Content-Type': type,
-            'Access-Control-Allow-Origin': req.headers.origin || "*",
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
-          });
+        header['Accept-Ranges'] = 'bytes';
+        header['Content-Range'] = 'bytes ' + range[0] + '-' + range[1] + '/' + total;
+        header['Content-Length'] = range[2];
+
+        res.writeHead(206, header);
       } else {
-        res.writeHead(200,
-          {
-            'Content-Length': range[1],
-            'Content-Type': type,
-            'Access-Control-Allow-Origin': req.headers.origin || "*",
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'POST, GET, OPTIONS'
-          });
+        res.writeHead(200, header);
       }
 
       file.pipe(res);
