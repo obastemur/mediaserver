@@ -76,6 +76,7 @@ exports = module.exports = {
   ".la": "audio/nspaudio",
   ".lam": "audio/x-liveaudio",
   ".lma": "audio/x-nspaudio",
+  ".flac": "audio/flac",
   ".m1v": "video/mpeg",
   ".m2a": "audio/mpeg",
   ".m2v": "video/mpeg",
