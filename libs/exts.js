@@ -54,6 +54,7 @@ exports = module.exports = {
   ".dxf": "image/vnd.dwg",
   ".fli": "video/fli",
   ".flo": "image/florian",
+  ".flac": "audio/flac",
   ".fmf": "video/x-atomic3d-feature",
   ".fpx": "image/vnd.fpx",
   ".funk": "audio/make",
