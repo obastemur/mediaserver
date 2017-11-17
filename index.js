@@ -82,7 +82,7 @@ exports.pipe = function (req, res, path, type, opt_cb) {
 
   var range = getRange(req, total);
 
-  var ext = pathModule.extname(path);
+  var ext = pathModule.extname(path).toLowerCase();
   if (!type && ext && ext.length) {
     type = exts[ext];
   }
