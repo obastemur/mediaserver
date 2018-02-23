@@ -97,6 +97,16 @@ exports.pipe = function (req, res, path, type, opt_cb) {
   } else {
     var file = fs.createReadStream(path, {start: range[0], end: range[1]});
 
+    var cleanupFileStream = function() {
+      file.close();
+    }
+
+    // the event emitted seems to change based on version of node.js
+    // 'close' is fired as of v6.11.5
+    res.on('close', cleanupFileStream); // https://stackoverflow.com/a/9021242
+    res.on('end', cleanupFileStream);  // https://stackoverflow.com/a/16897986
+    res.on('finish', cleanupFileStream); // https://stackoverflow.com/a/14093091 - https://stackoverflow.com/a/38057516
+
     if (!ext.length || !pipe_extensions[ext]) {
       var header = {
         'Content-Length': range[1],
