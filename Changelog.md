@@ -1,3 +1,6 @@
+0.1.1
+* clean up the file stream on response end/close/finish (#10)
+
 0.1.0
 * Desktop safari media streaming fix
 

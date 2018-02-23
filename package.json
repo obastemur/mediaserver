@@ -1,7 +1,7 @@
 {
     "name": "mediaserver",
     "description": "Media & static asset streaming for http(s) server",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": {
         "name": "Oguz Bastemur",
         "email": "obastemur@gmail.com"
@@ -15,6 +15,5 @@
     },
     "license": "MIT",
     "homepage": "https://github.com/obastemur/mediaserver",
-    "readmeFilename": "Readme.md",
-    "project": "mediaserver.jxp"
+    "readmeFilename": "Readme.md"
 }

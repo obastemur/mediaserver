@@ -1,7 +1,7 @@
 /**
  * mediaserver module for node.js
  *
- * MIT license, Oguz Bastemur 2014-2016
+ * MIT license, Oguz Bastemur 2014-2018
  */
 
 var fs = require('fs'),
